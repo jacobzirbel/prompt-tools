@@ -23,6 +23,27 @@ function SettingsPage({ showToast }) {
     return () => { cancelled = true; };
   }, [showToast]);
 
+  function updateWorkspace(id, patch) {
+    setSettings(s => ({
+      ...s,
+      workspaces: (s.workspaces || []).map(w => w.id === id ? { ...w, ...patch } : w)
+    }));
+  }
+
+  function deleteWorkspace(id) {
+    setSettings(s => ({
+      ...s,
+      workspaces: (s.workspaces || []).filter(w => w.id !== id)
+    }));
+  }
+
+  function addWorkspace() {
+    setSettings(s => ({
+      ...s,
+      workspaces: [...(s.workspaces || []), { id: crypto.randomUUID(), name: '', path: '' }]
+    }));
+  }
+
   function toggleVisibleModel(label) {
     setSettings(s => {
       const cur = Array.isArray(s.visibleModels) ? s.visibleModels : [];
@@ -79,6 +100,36 @@ function SettingsPage({ showToast }) {
               <option key={a.agentType} value={a.agentType}>{a.label}</option>
             ))}
           </select>
+        </div>
+
+        <div className="settings-section">
+          <label className="settings-label">Workspaces</label>
+          <p className="settings-hint">Named workspace paths used by the Tools page.</p>
+          <div className="workspace-list">
+            {(settings.workspaces || []).length === 0 && (
+              <div className="settings-muted">No workspaces yet.</div>
+            )}
+            {(settings.workspaces || []).map(w => (
+              <div key={w.id} className="workspace-row">
+                <input
+                  className="settings-input workspace-name"
+                  placeholder="name"
+                  value={w.name}
+                  onChange={e => updateWorkspace(w.id, { name: e.target.value })}
+                />
+                <input
+                  className="settings-input workspace-path"
+                  placeholder="/absolute/path"
+                  value={w.path}
+                  onChange={e => updateWorkspace(w.id, { path: e.target.value })}
+                />
+                <button className="icon-btn delete" title="Remove"
+                        onClick={() => deleteWorkspace(w.id)}>✕</button>
+              </div>
+            ))}
+          </div>
+          <button className="btn btn-ghost workspace-add"
+                  onClick={addWorkspace}>+ Add workspace</button>
         </div>
 
         <div className="settings-section">

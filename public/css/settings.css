@@ -109,3 +109,39 @@
   font-size: 12px;
   font-style: italic;
 }
+
+/* ── Workspace list ── */
+.settings-input {
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 6px 10px;
+  outline: none;
+  transition: border-color .15s;
+}
+.settings-input:focus { border-color: var(--accent); }
+.settings-input::placeholder { color: var(--muted); opacity: .55; }
+
+.workspace-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+.workspace-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.workspace-name { width: 120px; flex-shrink: 0; }
+.workspace-path { flex: 1; min-width: 0; }
+
+.workspace-add {
+  align-self: flex-start;
+  margin-top: 8px;
+  font-size: 12px;
+  padding: 5px 12px;
+}

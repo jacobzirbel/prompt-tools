@@ -15,7 +15,8 @@ const CONVOS_FILE = path.join(DATA_DIR, 'convos.json');
 
 const DEFAULT_SETTINGS = {
   defaultAgent: 'builder',
-  visibleModels: ['GPT-4.1', 'Claude Sonnet 4.5']
+  visibleModels: ['GPT-4.1', 'Claude Sonnet 4.5'],
+  workspaces: []
 };
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -60,7 +61,12 @@ app.put('/api/settings', (req, res) => {
       ? body.defaultAgent : DEFAULT_SETTINGS.defaultAgent,
     visibleModels: Array.isArray(body.visibleModels)
       ? body.visibleModels.filter(m => typeof m === 'string' && m.trim()).map(m => m.trim())
-      : DEFAULT_SETTINGS.visibleModels.slice()
+      : DEFAULT_SETTINGS.visibleModels.slice(),
+    workspaces: Array.isArray(body.workspaces)
+      ? body.workspaces
+          .filter(w => w && typeof w.id === 'string' && typeof w.name === 'string' && typeof w.path === 'string')
+          .map(w => ({ id: w.id, name: w.name, path: w.path }))
+      : []
   };
   fs.writeFileSync(SETTINGS_FILE, JSON.stringify(next, null, 2));
   res.json(next);
