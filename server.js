@@ -14,9 +14,10 @@ const MODEL_PRICING_FILE = path.join(DATA_DIR, 'model-pricing.json');
 const CONVOS_FILE = path.join(DATA_DIR, 'convos.json');
 
 const DEFAULT_SETTINGS = {
-  defaultAgent: 'builder',
-  visibleModels: ['GPT-4.1', 'Claude Sonnet 4.5'],
-  workspaces: []
+  defaultAgent: 'critical-thinker',
+  visibleModels: ['Claude Sonnet 4.6', 'GPT-4.1'],
+  workspaces: [],
+  userConfigRoots: [],
 };
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -66,6 +67,11 @@ app.put('/api/settings', (req, res) => {
       ? body.workspaces
           .filter(w => w && typeof w.id === 'string' && typeof w.name === 'string' && typeof w.path === 'string')
           .map(w => ({ id: w.id, name: w.name, path: w.path }))
+      : [],
+    userConfigRoots: Array.isArray(body.userConfigRoots)
+      ? body.userConfigRoots
+          .filter(r => r && typeof r.id === 'string' && typeof r.label === 'string' && typeof r.path === 'string')
+          .map(r => ({ id: r.id, label: r.label, path: r.path }))
       : []
   };
   fs.writeFileSync(SETTINGS_FILE, JSON.stringify(next, null, 2));
@@ -128,7 +134,7 @@ app.get('/api/filetree', (req, res) => {
     const dirs = [], files = [];
     for (const e of entries) {
       if (SKIP.has(e.name)) continue;
-      const rel = path.relative(root, path.join(dirPath, e.name));
+      const rel = path.relative(root, path.join(dirPath, e.name)).replace(/\\/g, '/');
       if (e.isDirectory()) {
         dirs.push({ name: e.name, path: rel, type: 'dir',
           children: walk(path.join(dirPath, e.name), depth + 1) });
@@ -296,10 +302,16 @@ app.get('/api/instructions', (req, res) => {
     'instructions/**/*.md'
   ];
 
+  let userConfigRoots = [];
+  try {
+    const s = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+    userConfigRoots = Array.isArray(s.userConfigRoots) ? s.userConfigRoots : [];
+  } catch {}
+
   const seen = new Set();
   const out = [];
 
-  function push(absPath, sourceRel) {
+  function push(absPath, sourceRel, location = 'workspace') {
     if (seen.has(absPath)) return;
     if (!fs.existsSync(absPath) || !fs.statSync(absPath).isFile()) return;
     const parsed = parseInstructionFile(absPath);
@@ -308,7 +320,7 @@ app.get('/api/instructions', (req, res) => {
     out.push({
       name: path.basename(absPath),
       path: absPath,
-      location: 'workspace',
+      location,
       applyTo: parsed.applyTo,
       description: parsed.description,
       tokens: parsed.tokens,
@@ -324,6 +336,20 @@ app.get('/api/instructions', (req, res) => {
     });
     for (const rel of matches) push(path.join(root, rel), rel);
   } catch { /* ignore */ }
+
+  for (const ucr of userConfigRoots) {
+    const r = validPath(ucr.path);
+    if (!r) continue;
+    const label = ucr.label || 'User config';
+    for (const rel of fixed) push(path.join(r, rel), rel, label);
+    try {
+      const matches = fg.sync(patterns, {
+        cwd: r, onlyFiles: true, dot: true,
+        ignore: ['node_modules/**', '.git/**']
+      });
+      for (const rel of matches) push(path.join(r, rel), rel, label);
+    } catch {}
+  }
 
   res.json({
     files: out,

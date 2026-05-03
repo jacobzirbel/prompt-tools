@@ -44,6 +44,27 @@ function SettingsPage({ showToast }) {
     }));
   }
 
+  function updateUserConfigRoot(id, patch) {
+    setSettings(s => ({
+      ...s,
+      userConfigRoots: (s.userConfigRoots || []).map(r => r.id === id ? { ...r, ...patch } : r)
+    }));
+  }
+
+  function deleteUserConfigRoot(id) {
+    setSettings(s => ({
+      ...s,
+      userConfigRoots: (s.userConfigRoots || []).filter(r => r.id !== id)
+    }));
+  }
+
+  function addUserConfigRoot() {
+    setSettings(s => ({
+      ...s,
+      userConfigRoots: [...(s.userConfigRoots || []), { id: crypto.randomUUID(), label: '', path: '' }]
+    }));
+  }
+
   function toggleVisibleModel(label) {
     setSettings(s => {
       const cur = Array.isArray(s.visibleModels) ? s.visibleModels : [];
@@ -130,6 +151,36 @@ function SettingsPage({ showToast }) {
           </div>
           <button className="btn btn-ghost workspace-add"
                   onClick={addWorkspace}>+ Add workspace</button>
+        </div>
+
+        <div className="settings-section">
+          <label className="settings-label">User config roots</label>
+          <p className="settings-hint">Extra directories scanned for instruction files in the Context Auditor.</p>
+          <div className="workspace-list">
+            {(settings.userConfigRoots || []).length === 0 && (
+              <div className="settings-muted">No user config roots yet.</div>
+            )}
+            {(settings.userConfigRoots || []).map(r => (
+              <div key={r.id} className="workspace-row">
+                <input
+                  className="settings-input workspace-name"
+                  placeholder="label"
+                  value={r.label}
+                  onChange={e => updateUserConfigRoot(r.id, { label: e.target.value })}
+                />
+                <input
+                  className="settings-input workspace-path"
+                  placeholder="/absolute/path"
+                  value={r.path}
+                  onChange={e => updateUserConfigRoot(r.id, { path: e.target.value })}
+                />
+                <button className="icon-btn delete" title="Remove"
+                        onClick={() => deleteUserConfigRoot(r.id)}>✕</button>
+              </div>
+            ))}
+          </div>
+          <button className="btn btn-ghost workspace-add"
+                  onClick={addUserConfigRoot}>+ Add root</button>
         </div>
 
         <div className="settings-section">
