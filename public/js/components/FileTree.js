@@ -26,7 +26,7 @@ function FileTree({ tree, mode, state, onStateChange, showTokens, filter }) {
         const parent = parts.slice(0, i).join('/');
         if (state[parent]) return state[parent];
       }
-      return null;
+      return 'legacy';
     }
     // select mode
     if (state.has(nodePath)) return true;

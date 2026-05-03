@@ -81,7 +81,7 @@ function GlobBuilderTool({ showToast }) {
         const parent = parts.slice(0, i).join('/');
         if (assignments[parent]) return assignments[parent];
       }
-      return null;
+      return 'legacy';
     }
     function countExtIn(node, ext) {
       if (node.type === 'file') return node.name.endsWith(ext) ? 1 : 0;
@@ -242,9 +242,6 @@ function GlobBuilderTool({ showToast }) {
                 </div>
               ))}
               <div className="tools-output-actions">
-                <button className="tools-side-action"
-                        disabled={!Object.values(assignments).includes('legacy')}
-                        onClick={() => clearSide('legacy')}>clear legacy</button>
                 <button className="tools-side-action"
                         disabled={!Object.values(assignments).includes('modern')}
                         onClick={() => clearSide('modern')}>clear modern</button>
