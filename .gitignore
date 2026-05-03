@@ -1,3 +1,4 @@
 old-project/
 .env
 data/
+node_modules/

@@ -1,0 +1,199 @@
+/* ── Context page ── */
+.context-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.ctx-scan-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.ctx-scanned-at {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.context-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.context-list::-webkit-scrollbar { width: 6px; }
+.context-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+.ctx-location-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+.ctx-location-header {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 6px 0 2px;
+}
+
+.ctx-empty-state {
+  color: var(--muted);
+  font-size: 13px;
+  font-style: italic;
+  padding: 24px 4px;
+  text-align: center;
+}
+
+.ctx-file-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.ctx-file-card.unmatched { opacity: .35; }
+.ctx-file-card.matched { border-left: 3px solid var(--green); padding-left: 9px; }
+
+.ctx-applyto-pill {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: rgba(99,102,241,.2);
+  color: var(--accent-h);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ctx-applyto-none {
+  font-size: 10px;
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-style: italic;
+}
+
+.ctx-file-name {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ctx-file-tokens {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ctx-glob-section {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+  padding: 10px 20px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ctx-glob-header {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ctx-glob-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.ctx-glob-input {
+  flex: 1;
+  min-width: 0;
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 6px 10px;
+  outline: none;
+  transition: border-color .15s;
+}
+.ctx-glob-input:focus { border-color: var(--accent); }
+.ctx-glob-input::placeholder { color: var(--muted); opacity: .6; }
+
+.ctx-glob-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ctx-glob-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+.ctx-glob-pattern {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ctx-glob-toggle {
+  font-size: 10px;
+  font-weight: 600;
+  font-family: inherit;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background .12s, color .12s, border-color .12s;
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+}
+.ctx-glob-toggle:hover { border-color: var(--text); color: var(--text); }
+.ctx-glob-toggle.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.ctx-glob-toggle.active:hover { background: var(--accent-h); border-color: var(--accent-h); }
+
+.ctx-matched-tok {
+  color: var(--green);
+  font-family: var(--mono);
+  font-size: 13px;
+}
