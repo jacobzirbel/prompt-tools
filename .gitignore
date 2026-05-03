@@ -1,4 +1,4 @@
 old-project/
 .env
-data/
+data/settings.json
 node_modules/

@@ -1,0 +1,487 @@
+[
+  {
+    "agentType": "ask",
+    "label": "Ask",
+    "desc": "Explain or explore something",
+    "alwaysShown": [
+      { "id": "QUESTION", "hint": "The specific thing you want to understand" },
+      { "id": "GOAL", "hint": "Why you're asking — what you'll do with the answer" }
+    ],
+    "switches": [
+      {
+        "id": "code_anchored",
+        "label": "Code-anchored",
+        "emoji": "📌",
+        "hint": "This is about specific file(s) or symbol(s)",
+        "reveals": [
+          { "id": "FILE", "hint": "Specific file(s) or path(s) to focus on" },
+          { "id": "SYMBOL", "hint": "Class, function, or method name" }
+        ]
+      },
+      {
+        "id": "stack_specific",
+        "label": "Stack-specific",
+        "emoji": "🧰",
+        "hint": "Language or framework matters for the answer",
+        "reveals": [
+          { "id": "STACK", "hint": "Language, framework, runtime, or version constraints" }
+        ]
+      },
+      {
+        "id": "context_rich",
+        "label": "Has prior context",
+        "emoji": "📚",
+        "hint": "Background or history Copilot needs to know",
+        "reveals": [
+          { "id": "BACKGROUND", "hint": "Prior decisions, history, or context worth knowing" }
+        ]
+      },
+      {
+        "id": "output_shaped",
+        "label": "Specific output shape",
+        "emoji": "📐",
+        "hint": "You want the answer in a particular form",
+        "reveals": [
+          { "id": "FORMAT", "hint": "Output shape — bullets, table, prose, code-only, etc." },
+          { "id": "LENGTH", "hint": "Target length or level of detail" }
+        ]
+      },
+      {
+        "id": "audience_aware",
+        "label": "Audience matters",
+        "emoji": "👥",
+        "hint": "Tailor the explanation to a specific reader",
+        "reveals": [
+          { "id": "AUDIENCE", "hint": "Who will read or use the answer" }
+        ]
+      },
+      {
+        "id": "comparative",
+        "label": "Comparing options",
+        "emoji": "⚖️",
+        "hint": "Multiple things being weighed against each other",
+        "reveals": [
+          { "id": "ALTERNATIVES", "hint": "Options being considered or compared" }
+        ]
+      },
+      {
+        "id": "depth_tuned",
+        "label": "Specific depth",
+        "emoji": "🔬",
+        "hint": "Calibrate how deep the answer goes",
+        "reveals": [
+          { "id": "DEPTH", "hint": "Surface, working, or expert-level treatment" }
+        ]
+      }
+    ]
+  },
+  {
+    "agentType": "agent",
+    "label": "Agent",
+    "desc": "Build or change something",
+    "alwaysShown": [
+      { "id": "TASK", "hint": "What to build, change, or do" },
+      { "id": "DONE WHEN", "hint": "1–3 observable acceptance criteria" }
+    ],
+    "switches": [
+      {
+        "id": "code_anchored",
+        "label": "Code-anchored",
+        "emoji": "📌",
+        "hint": "Targets specific file(s) or symbol(s)",
+        "reveals": [
+          { "id": "FILE", "hint": "Files or paths the change should touch" },
+          { "id": "SYMBOL", "hint": "Class, function, or method to modify" }
+        ]
+      },
+      {
+        "id": "stack_specific",
+        "label": "Stack-specific",
+        "emoji": "🧰",
+        "hint": "Language, framework, or version constrains the work",
+        "reveals": [
+          { "id": "STACK", "hint": "Language, framework, runtime, or version constraints" }
+        ]
+      },
+      {
+        "id": "constrained",
+        "label": "Has hard constraints",
+        "emoji": "🚧",
+        "hint": "Specific things that must hold or must not be done",
+        "reveals": [
+          { "id": "CONSTRAINTS", "hint": "Hard requirements that must hold" },
+          { "id": "NON_GOALS", "hint": "Explicitly out of scope — do not address" }
+        ]
+      },
+      {
+        "id": "context_rich",
+        "label": "Has prior context",
+        "emoji": "📚",
+        "hint": "Background or earlier decisions matter",
+        "reveals": [
+          { "id": "BACKGROUND", "hint": "Prior decisions, history, or context worth knowing" }
+        ]
+      },
+      {
+        "id": "stakes_flagged",
+        "label": "High stakes",
+        "emoji": "⚠️",
+        "hint": "Specific risks or consequences worth surfacing",
+        "reveals": [
+          { "id": "RISKS", "hint": "Specific risks or failure modes to watch for" },
+          { "id": "STAKES", "hint": "What's at risk if this goes wrong" }
+        ]
+      },
+      {
+        "id": "time_boxed",
+        "label": "Scope-limited",
+        "emoji": "⏱️",
+        "hint": "Hard cap on what gets touched",
+        "reveals": [
+          { "id": "SCOPE_LIMIT", "hint": "Hard cap on scope — files touched, time, or surface area" }
+        ]
+      },
+      {
+        "id": "test_driven",
+        "label": "Test requirements",
+        "emoji": "🧪",
+        "hint": "Tests are required as part of the work",
+        "reveals": [
+          { "id": "TEST_REQUIREMENTS", "hint": "Tests required — types, coverage, or specific cases" }
+        ]
+      },
+      {
+        "id": "style_bound",
+        "label": "Follow conventions",
+        "emoji": "🎨",
+        "hint": "Specific style or pattern rules apply",
+        "reveals": [
+          { "id": "CONVENTIONS", "hint": "Style, naming, or pattern rules to follow" }
+        ]
+      }
+    ]
+  },
+  {
+    "agentType": "plan",
+    "label": "Plan",
+    "desc": "Produce a plan before acting",
+    "alwaysShown": [
+      { "id": "GOAL", "hint": "What you want to achieve" },
+      { "id": "WHAT EXISTS", "hint": "Relevant code, patterns, or prior work already in place" }
+    ],
+    "switches": [
+      {
+        "id": "code_anchored",
+        "label": "Code-anchored",
+        "emoji": "📌",
+        "hint": "Plan covers specific file(s) or symbol(s)",
+        "reveals": [
+          { "id": "FILE", "hint": "Files or paths in scope" },
+          { "id": "SYMBOL", "hint": "Class, function, or method central to the plan" }
+        ]
+      },
+      {
+        "id": "stack_specific",
+        "label": "Stack-specific",
+        "emoji": "🧰",
+        "hint": "Language, framework, or version shapes the plan",
+        "reveals": [
+          { "id": "STACK", "hint": "Language, framework, runtime, or version constraints" }
+        ]
+      },
+      {
+        "id": "constrained",
+        "label": "Has hard constraints",
+        "emoji": "🚧",
+        "hint": "Specific things the plan must respect or avoid",
+        "reveals": [
+          { "id": "CONSTRAINTS", "hint": "Hard requirements the plan must satisfy" },
+          { "id": "NON_GOALS", "hint": "Out of scope for this plan" }
+        ]
+      },
+      {
+        "id": "context_rich",
+        "label": "Has prior context",
+        "emoji": "📚",
+        "hint": "Earlier decisions or history shape the plan",
+        "reveals": [
+          { "id": "BACKGROUND", "hint": "Prior decisions, history, or context worth knowing" }
+        ]
+      },
+      {
+        "id": "output_shaped",
+        "label": "Specific plan format",
+        "emoji": "📐",
+        "hint": "Plan should be delivered in a particular shape",
+        "reveals": [
+          { "id": "FORMAT", "hint": "Plan format — phased steps, checklist, etc." },
+          { "id": "DETAIL LEVEL", "hint": "Rough sketch / step-by-step / implementation-ready" }
+        ]
+      },
+      {
+        "id": "stakes_flagged",
+        "label": "High stakes",
+        "emoji": "⚠️",
+        "hint": "Plan should explicitly account for risk",
+        "reveals": [
+          { "id": "BLOCKERS", "hint": "Known unknowns or risks that could derail the plan" },
+          { "id": "STAKES", "hint": "What's at risk if the plan fails" }
+        ]
+      },
+      {
+        "id": "comparative",
+        "label": "Weighing approaches",
+        "emoji": "⚖️",
+        "hint": "Multiple plan strategies under consideration",
+        "reveals": [
+          { "id": "ALTERNATIVES", "hint": "Alternative approaches the plan should compare" }
+        ]
+      },
+      {
+        "id": "test_driven",
+        "label": "Validation required",
+        "emoji": "🧪",
+        "hint": "Plan should specify how success is verified",
+        "reveals": [
+          { "id": "VALIDATION", "hint": "How the plan's success will be verified at each stage" }
+        ]
+      }
+    ]
+  },
+  {
+    "agentType": "builder",
+    "label": "Builder",
+    "desc": "Implement something specific",
+    "alwaysShown": [
+      { "id": "TASK", "hint": "What to build — two sentences max" },
+      { "id": "CONTEXT", "hint": "Relevant types, file paths, existing patterns" },
+      { "id": "CONSTRAINTS", "hint": "Hard rules — match this, don't touch that, use X not Y" },
+      { "id": "DONE WHEN", "hint": "1–3 observable acceptance criteria" }
+    ],
+    "switches": [
+      {
+        "id": "code_anchored",
+        "label": "Code-anchored",
+        "emoji": "📌",
+        "hint": "Implementation lives in specific file(s) or symbol(s)",
+        "reveals": [
+          { "id": "FILE", "hint": "Files where the implementation belongs" },
+          { "id": "SYMBOL", "hint": "Class, function, or method to implement or modify" }
+        ]
+      },
+      {
+        "id": "stack_specific",
+        "label": "Stack-specific",
+        "emoji": "🧰",
+        "hint": "Language, framework, or version constrains the build",
+        "reveals": [
+          { "id": "STACK", "hint": "Language, framework, runtime, or version constraints" }
+        ]
+      },
+      {
+        "id": "test_driven",
+        "label": "Tests + acceptance",
+        "emoji": "🧪",
+        "hint": "Specific tests or acceptance criteria required",
+        "reveals": [
+          { "id": "ACCEPTANCE", "hint": "Concrete criteria for 'done'" },
+          { "id": "TEST_REQUIREMENTS", "hint": "Tests required — types, coverage, or specific cases" }
+        ]
+      },
+      {
+        "id": "style_bound",
+        "label": "Follow conventions",
+        "emoji": "🎨",
+        "hint": "Specific style or pattern rules apply",
+        "reveals": [
+          { "id": "CONVENTIONS", "hint": "Style, naming, or pattern rules to follow" }
+        ]
+      },
+      {
+        "id": "stakes_flagged",
+        "label": "High stakes",
+        "emoji": "⚠️",
+        "hint": "Specific failure modes to guard against",
+        "reveals": [
+          { "id": "RISKS", "hint": "Specific risks or failure modes to watch for" }
+        ]
+      },
+      {
+        "id": "time_boxed",
+        "label": "Scope-limited",
+        "emoji": "⏱️",
+        "hint": "Hard cap on what gets touched",
+        "reveals": [
+          { "id": "SCOPE_LIMIT", "hint": "Hard cap on scope — files touched, time, or surface area" }
+        ]
+      }
+    ]
+  },
+  {
+    "agentType": "thinker",
+    "label": "Thinker",
+    "desc": "Reason through a problem",
+    "alwaysShown": [
+      { "id": "PROBLEM", "hint": "What you're trying to figure out; include what makes it unclear" },
+      { "id": "CONTEXT", "hint": "Relevant files, prior decisions, constraints that affect the approach" }
+    ],
+    "switches": [
+      {
+        "id": "output_shaped",
+        "label": "Specific output shape",
+        "emoji": "📐",
+        "hint": "Reasoning should be delivered in a particular form",
+        "reveals": [
+          { "id": "FORMAT", "hint": "Output shape — argument map, pros/cons, narrative, etc." },
+          { "id": "LENGTH", "hint": "Target length or level of detail" }
+        ]
+      },
+      {
+        "id": "audience_aware",
+        "label": "Audience matters",
+        "emoji": "👥",
+        "hint": "Reasoning is for a specific reader",
+        "reveals": [
+          { "id": "AUDIENCE", "hint": "Who will read or use the reasoning" }
+        ]
+      },
+      {
+        "id": "comparative",
+        "label": "Comparing options",
+        "emoji": "⚖️",
+        "hint": "Multiple options being weighed",
+        "reveals": [
+          { "id": "ALTERNATIVES", "hint": "Options or paths being considered" }
+        ]
+      },
+      {
+        "id": "depth_tuned",
+        "label": "Specific depth",
+        "emoji": "🔬",
+        "hint": "Calibrate how far to push the reasoning",
+        "reveals": [
+          { "id": "DEPTH", "hint": "Surface, working, or expert-level treatment" }
+        ]
+      },
+      {
+        "id": "assumption_explicit",
+        "label": "Surface assumptions",
+        "emoji": "💭",
+        "hint": "Make assumptions explicit rather than hidden",
+        "reveals": [
+          { "id": "ASSUMPTIONS", "hint": "Assumptions to surface, challenge, or hold fixed" }
+        ]
+      },
+      {
+        "id": "evidence_based",
+        "label": "Ground in evidence",
+        "emoji": "📊",
+        "hint": "Reasoning should cite sources or data",
+        "reveals": [
+          { "id": "EVIDENCE", "hint": "Sources, data, or prior art to ground the analysis" }
+        ]
+      },
+      {
+        "id": "persona_framed",
+        "label": "From a viewpoint",
+        "emoji": "🎭",
+        "hint": "Reason from a specific perspective or persona",
+        "reveals": [
+          { "id": "PERSPECTIVE", "hint": "Viewpoint, role, or persona to think from" }
+        ]
+      }
+    ]
+  },
+  {
+    "agentType": "critical-thinker",
+    "label": "Critical Thinker",
+    "desc": "Examine a decision or approach",
+    "alwaysShown": [
+      { "id": "APPROACH", "hint": "The approach or decision you want examined" }
+    ],
+    "switches": [
+      {
+        "id": "depth_tuned",
+        "label": "Specific depth",
+        "emoji": "🔬",
+        "hint": "Calibrate how deep the critique goes",
+        "reveals": [
+          { "id": "DEPTH", "hint": "Surface scan, working review, or deep audit" }
+        ]
+      }
+    ]
+  },
+  {
+    "agentType": "devils-advocate",
+    "label": "Devil's Advocate",
+    "desc": "Stress-test an idea",
+    "alwaysShown": [
+      { "id": "IDEA", "hint": "The claim, proposal, or decision to stress-test — state it as a position, not a question" }
+    ],
+    "switches": [
+      {
+        "id": "context_rich",
+        "label": "Has prior context",
+        "emoji": "📚",
+        "hint": "Background that frames the idea",
+        "reveals": [
+          { "id": "BACKGROUND", "hint": "How this idea emerged and what surrounds it" }
+        ]
+      },
+      {
+        "id": "constrained",
+        "label": "Bound the attack",
+        "emoji": "🚧",
+        "hint": "Some parts of the idea aren't open for criticism",
+        "reveals": [
+          { "id": "SACRED COWS", "hint": "What's not up for debate — focus criticism elsewhere" }
+        ]
+      },
+      {
+        "id": "stakes_flagged",
+        "label": "High stakes",
+        "emoji": "⚠️",
+        "hint": "Failure consequences worth surfacing",
+        "reveals": [
+          { "id": "STAKES", "hint": "What's at risk if this idea is wrong" }
+        ]
+      },
+      {
+        "id": "persona_framed",
+        "label": "Attack from POV",
+        "emoji": "🎭",
+        "hint": "Stress-test from a specific perspective",
+        "reveals": [
+          { "id": "PERSPECTIVE", "hint": "Viewpoint or persona to argue from — skeptical user, hostile reviewer, future maintainer, etc." }
+        ]
+      },
+      {
+        "id": "assumption_explicit",
+        "label": "Target assumptions",
+        "emoji": "💭",
+        "hint": "Specific assumptions to attack",
+        "reveals": [
+          { "id": "ASSUMPTIONS", "hint": "Assumptions the idea rests on — attack these specifically" }
+        ]
+      },
+      {
+        "id": "evidence_based",
+        "label": "Ground in evidence",
+        "emoji": "📊",
+        "hint": "Critique should cite data or precedent",
+        "reveals": [
+          { "id": "EVIDENCE", "hint": "Sources, prior failures, or counterexamples to draw on" }
+        ]
+      },
+      {
+        "id": "output_shaped",
+        "label": "Specific output shape",
+        "emoji": "📐",
+        "hint": "Stress-test delivered in a particular form",
+        "reveals": [
+          { "id": "FORMAT", "hint": "Output shape — ranked failure modes, red-team memo, scenario list, etc." }
+        ]
+      }
+    ]
+  }
+]
