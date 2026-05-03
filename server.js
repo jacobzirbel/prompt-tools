@@ -149,13 +149,45 @@ app.get('/api/tokentree', (req, res) => {
   const root = validPath(req.query.path);
   if (!root) return res.json({ error: 'Invalid path' });
 
-  const IGNORE = ['node_modules/**', '.git/**', 'dist/**', 'build/**', '.next/**', 'coverage/**'];
+  const SKIP_DIRS = new Set([
+    'node_modules', '.git', '.svn',
+    'dist', 'build', 'out', 'output',
+    '.next', '.nuxt', '.svelte-kit',
+    'coverage', '.nyc_output',
+    'bin', 'obj',
+    'wwwroot',
+    '.cache', '.parcel-cache', '.turbo',
+    'vendor',
+  ]);
+
+  const IGNORE = [
+    '**/node_modules', '**/node_modules/**',
+    '**/.git', '**/.git/**',
+    '**/dist', '**/dist/**',
+    '**/build', '**/build/**',
+    '**/out', '**/out/**',
+    '**/.next', '**/.next/**',
+    '**/coverage', '**/coverage/**',
+    '**/bin', '**/bin/**',
+    '**/obj', '**/obj/**',
+    '**/wwwroot', '**/wwwroot/**',
+    '**/.cache', '**/.cache/**',
+    '**/.turbo', '**/.turbo/**',
+    '**/vendor', '**/vendor/**',
+    '**/*.min.js', '**/*.min.css', '**/*.map',
+  ];
+
   const MAX_FILE_BYTES = 1_000_000;
 
   let relPaths;
   try {
     relPaths = fg.sync(['**/*'], {
-      cwd: root, onlyFiles: true, ignore: IGNORE, dot: false, followSymbolicLinks: false
+      cwd: root,
+      onlyFiles: true,
+      ignore: IGNORE,
+      dot: false,
+      followSymbolicLinks: false,
+      deep: (dirPath) => !SKIP_DIRS.has(path.basename(dirPath)),
     });
   } catch (e) {
     return res.status(500).json({ error: 'Failed to walk directory', detail: e.message });

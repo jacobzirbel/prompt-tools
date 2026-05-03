@@ -28,7 +28,6 @@ function App() {
       <Header route={route} />
       <div id="main">
         {route === 'builder'  && <BuilderPage  showToast={showToast} />}
-        {route === 'context'  && <ContextPage  showToast={showToast} />}
         {route === 'tools'    && <ToolsPage    showToast={showToast} />}
         {route === 'settings' && <SettingsPage showToast={showToast} />}
       </div>

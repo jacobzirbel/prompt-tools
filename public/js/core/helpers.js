@@ -19,7 +19,7 @@ function formatCost(n) {
   return '$' + n.toFixed(2);
 }
 
-const ROUTES = ['builder', 'context', 'tools', 'settings'];
+const ROUTES = ['builder', 'tools', 'settings'];
 
 function parseHash() {
   const raw = window.location.hash.replace(/^#\/?/, '');

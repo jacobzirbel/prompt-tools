@@ -1,13 +1,7 @@
 // Glob Builder — assign files to legacy/modern, generate consolidated globs.
 
-function GlobBuilderTool({ showToast }) {
-  const STORAGE_KEY = 'globBuilderPath';
-  const [path, setPath]               = useState(() => {
-    try { return localStorage.getItem(STORAGE_KEY) || ''; } catch { return ''; }
-  });
+function GlobBuilderTool({ workspacePath, showToast }) {
   const [tree, setTree]               = useState(null);
-  const [hasLoaded, setHasLoaded]     = useState(false);
-  const [error, setError]             = useState(null);
   const [loading, setLoading]         = useState(false);
   const [assignments, setAssignments] = useState(() => {
     try {
@@ -33,28 +27,19 @@ function GlobBuilderTool({ showToast }) {
   }, [assignments]);
 
   function loadTree(p) {
-    setLoading(true); setError(null);
+    if (!p) return;
+    setLoading(true);
     fetch('/api/filetree?path=' + encodeURIComponent(p))
       .then(r => r.json())
       .then(data => {
-        if (data && data.error) {
-          setError("Couldn't load — check the path");
-          setTree(null);
-        } else {
-          setTree(data);
-          setHasLoaded(true);
-        }
+        if (data && data.error) { setTree(null); }
+        else { setTree(data); }
       })
-      .catch(() => setError("Couldn't load — check the path"))
+      .catch(() => setTree(null))
       .finally(() => setLoading(false));
   }
 
-  useEffect(() => {
-    if (path) loadTree(path);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function onLoad(p) { setPath(p); loadTree(p); }
+  useEffect(() => { loadTree(workspacePath); }, [workspacePath]);
 
   function addExtension() {
     let v = extInput.trim();
@@ -150,106 +135,91 @@ function GlobBuilderTool({ showToast }) {
 
   return (
     <div className="tools-tool-body">
-      <PathBar
-        storageKey={STORAGE_KEY}
-        placeholder="/absolute/path/to/workspace"
-        error={error}
-        onLoad={onLoad}
-      />
+      <div className="tools-extensions">
+        <span className="tools-ext-label">extensions</span>
+        {extensions.map(ext => (
+          <span key={ext} className="tools-ext-pill">
+            {ext}
+            <button className="tools-ext-x" title="Remove" onClick={() => removeExtension(ext)}>✕</button>
+          </span>
+        ))}
+        <input
+          className="tools-ext-input"
+          placeholder="add ext (.tsx)"
+          value={extInput}
+          onChange={e => setExtInput(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addExtension(); } }}
+        />
+      </div>
 
-      {!hasLoaded && !loading && !error && (
-        <div className="path-empty">Enter a workspace path above and hit Load.</div>
-      )}
-
-      {(hasLoaded || loading) && (
-        <>
-          <div className="tools-extensions">
-            <span className="tools-ext-label">extensions</span>
-            {extensions.map(ext => (
-              <span key={ext} className="tools-ext-pill">
-                {ext}
-                <button className="tools-ext-x" title="Remove" onClick={() => removeExtension(ext)}>✕</button>
-              </span>
-            ))}
-            <input
-              className="tools-ext-input"
-              placeholder="add ext (.tsx)"
-              value={extInput}
-              onChange={e => setExtInput(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addExtension(); } }}
+      <div className="tools-body">
+        <div className="tools-tree-panel">
+          {loading ? (
+            <div className="tools-loading">Loading workspace…</div>
+          ) : !tree ? (
+            <div className="tools-loading">No data.</div>
+          ) : (
+            <FileTree
+              tree={tree}
+              mode="assign"
+              state={assignments}
+              onStateChange={setAssignments}
+              filter={fileMatches}
             />
+          )}
+        </div>
+
+        <div className="tools-output-panel">
+          <div className="tools-ext-grid-header">
+            <div className="tools-ext-grid-ext-col"></div>
+            <div className="tools-ext-grid-side-col tools-side-legacy-label">legacy</div>
+            <div className="tools-ext-grid-side-col tools-side-modern-label">modern</div>
           </div>
-
-          <div className="tools-body">
-            <div className="tools-tree-panel">
-              {loading ? (
-                <div className="tools-loading">Loading workspace…</div>
-              ) : !tree ? (
-                <div className="tools-loading">No data.</div>
-              ) : (
-                <FileTree
-                  tree={tree}
-                  mode="assign"
-                  state={assignments}
-                  onStateChange={setAssignments}
-                  filter={fileMatches}
-                />
-              )}
-            </div>
-
-            <div className="tools-output-panel">
-              <div className="tools-ext-grid-header">
-                <div className="tools-ext-grid-ext-col"></div>
-                <div className="tools-ext-grid-side-col tools-side-legacy-label">legacy</div>
-                <div className="tools-ext-grid-side-col tools-side-modern-label">modern</div>
-              </div>
-              {extensions.map(ext => (
-                <div key={ext} className="tools-ext-row">
-                  <div className="tools-ext-row-label">{ext}</div>
-                  {['legacy', 'modern'].map(side => {
-                    const list = globsByExt[ext]?.[side] || [];
-                    return (
-                      <div key={side} className={'tools-ext-cell tools-ext-cell-' + side}>
-                        {list.length === 0 ? (
-                          <div className="tools-glob-empty-cell">—</div>
-                        ) : (
-                          <>
-                            <button
-                              className="tools-copy-ext-btn"
-                              title={`Copy all ${side} ${ext} globs`}
-                              onClick={() => copyExtSide(ext, side)}>
-                              copy {list.length > 1 ? `(${list.length})` : ''}
+          {extensions.map(ext => (
+            <div key={ext} className="tools-ext-row">
+              <div className="tools-ext-row-label">{ext}</div>
+              {['legacy', 'modern'].map(side => {
+                const list = globsByExt[ext]?.[side] || [];
+                return (
+                  <div key={side} className={'tools-ext-cell tools-ext-cell-' + side}>
+                    {list.length === 0 ? (
+                      <div className="tools-glob-empty-cell">—</div>
+                    ) : (
+                      <>
+                        <button
+                          className="tools-copy-ext-btn"
+                          title={`Copy all ${side} ${ext} globs`}
+                          onClick={() => copyExtSide(ext, side)}>
+                          copy {list.length > 1 ? `(${list.length})` : ''}
+                        </button>
+                        {list.map((g, i) => {
+                          const key = side + ':' + ext + ':' + i;
+                          const flashed = copiedKey === key;
+                          return (
+                            <button key={key}
+                                    className={'tools-glob-chip' + (flashed ? ' copied' : '')}
+                                    title="Click to copy"
+                                    onClick={() => copyGlob(key, g.glob)}>
+                              <span className="tools-glob-text">{g.glob}</span>
+                              <span className="tools-glob-count">{g.count}</span>
+                              {flashed && <span className="tools-glob-flash">✓</span>}
                             </button>
-                            {list.map((g, i) => {
-                              const key = side + ':' + ext + ':' + i;
-                              const flashed = copiedKey === key;
-                              return (
-                                <button key={key}
-                                        className={'tools-glob-chip' + (flashed ? ' copied' : '')}
-                                        title="Click to copy"
-                                        onClick={() => copyGlob(key, g.glob)}>
-                                  <span className="tools-glob-text">{g.glob}</span>
-                                  <span className="tools-glob-count">{g.count}</span>
-                                  {flashed && <span className="tools-glob-flash">✓</span>}
-                                </button>
-                              );
-                            })}
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-              <div className="tools-output-actions">
-                <button className="tools-side-action"
-                        disabled={!Object.values(assignments).includes('modern')}
-                        onClick={() => clearSide('modern')}>clear modern</button>
-              </div>
+                          );
+                        })}
+                      </>
+                    )}
+                  </div>
+                );
+              })}
             </div>
+          ))}
+          <div className="tools-output-actions">
+            <button className="tools-side-action"
+                    disabled={!Object.values(assignments).includes('modern')}
+                    onClick={() => clearSide('modern')}>clear modern</button>
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 }

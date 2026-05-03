@@ -6,7 +6,9 @@
 //   onStateChange:  callback receiving the new state
 //   showTokens:     boolean — render token count column
 //   filter:         optional (file) => bool, hides files that don't match (used by GlobBuilder ext filter)
-function FileTree({ tree, mode, state, onStateChange, showTokens, filter }) {
+//   getEffective:   optional (nodePath) => bool — overrides internal effective() for select mode
+//   onToggle:       optional (nodePath) => void — overrides internal toggleSelect() for select mode
+function FileTree({ tree, mode, state, onStateChange, showTokens, filter, getEffective: getEffectiveOverride, onToggle }) {
   const [expanded, setExpanded] = useState(() => new Set());
 
   function toggleExpand(p) {
@@ -70,7 +72,9 @@ function FileTree({ tree, mode, state, onStateChange, showTokens, filter }) {
   }
 
   function renderRow(node, depth, isDir, isOpen) {
-    const eff = effective(node.path);
+    const eff = (mode === 'select' && getEffectiveOverride)
+      ? getEffectiveOverride(node.path)
+      : effective(node.path);
     const explicit = isExplicit(node.path);
     let cls = 'tools-row';
     if (mode === 'assign' && eff) {
@@ -98,7 +102,7 @@ function FileTree({ tree, mode, state, onStateChange, showTokens, filter }) {
             type="checkbox"
             className="tools-token-check"
             checked={!!eff}
-            onChange={() => toggleSelect(node.path)}
+            onChange={() => onToggle ? onToggle(node.path) : toggleSelect(node.path)}
             onClick={e => e.stopPropagation()}
           />
         )}

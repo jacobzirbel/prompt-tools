@@ -1,7 +1,6 @@
 function Header({ route }) {
   const navItems = [
     { id: 'builder',  label: 'Builder' },
-    { id: 'context',  label: 'Context' },
     { id: 'tools',    label: 'Tools' },
     { id: 'settings', label: 'Settings' },
   ];
