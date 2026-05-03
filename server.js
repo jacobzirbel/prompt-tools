@@ -358,6 +358,12 @@ app.get('/api/instructions', (req, res) => {
   });
 });
 
+// ── Tokenize ──
+app.post('/api/tokenize', (req, res) => {
+  const text = typeof req.body?.text === 'string' ? req.body.text : '';
+  res.json({ tokens: countTokens(text) });
+});
+
 app.listen(PORT, () => {
   console.log(`prompt-tools → http://localhost:${PORT}`);
 });

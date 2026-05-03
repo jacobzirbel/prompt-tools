@@ -1,9 +1,10 @@
 // Tools — workspace picker + tool picker shell.
 
 const TOOLS = [
-  { id: 'glob-builder',    label: 'Glob Builder' },
-  { id: 'token-counter',   label: 'Token Counter' },
-  { id: 'context-auditor', label: 'Context Auditor' },
+  { id: 'glob-builder',       label: 'Glob Builder' },
+  { id: 'token-counter',      label: 'Token Counter' },
+  { id: 'text-token-counter', label: 'Text Token Counter' },
+  { id: 'context-auditor',    label: 'Context Auditor' },
 ];
 
 function ToolsPage({ showToast }) {
@@ -76,9 +77,10 @@ function ToolsPage({ showToast }) {
               ))}
             </select>
           </div>
-          {activeTool === 'glob-builder'    && <GlobBuilderTool    workspacePath={workspacePath} showToast={showToast} />}
-          {activeTool === 'token-counter'   && <TokenCounterTool   workspacePath={workspacePath} showToast={showToast} />}
-          {activeTool === 'context-auditor' && <ContextAuditorTool workspacePath={workspacePath} showToast={showToast} />}
+          {activeTool === 'glob-builder'       && <GlobBuilderTool    workspacePath={workspacePath} showToast={showToast} />}
+          {activeTool === 'token-counter'      && <TokenCounterTool   workspacePath={workspacePath} showToast={showToast} />}
+          {activeTool === 'text-token-counter' && <TextTokenCounterTool showToast={showToast} />}
+          {activeTool === 'context-auditor'    && <ContextAuditorTool workspacePath={workspacePath} showToast={showToast} />}
         </>
       )}
     </div>
